@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>DomX</title>
+<meta name="application-name" content="DomX">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="DomX">
+<meta name="theme-color" content="#080808">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{min-height:100vh;background:#080808;display:flex;align-items:flex-start;justify-content:center;font-family:'Courier New',monospace;padding:24px 20px;color:#e7e9ea;}
+.wrap{width:100%;max-width:520px;padding-top:8px;}
+.header{margin-bottom:28px;display:flex;align-items:flex-end;justify-content:space-between;}
+.h-eye{font-size:10px;letter-spacing:.35em;color:#444;text-transform:uppercase;margin-bottom:6px;}
+.h-title{font-size:42px;font-weight:900;letter-spacing:-.04em;line-height:1;background:linear-gradient(135deg,#fff 60%,#1d9bf0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.h-badge{font-size:10px;letter-spacing:.2em;color:#1d9bf0;border:1px solid #1d9bf033;border-radius:20px;padding:4px 10px;text-transform:uppercase;}
+.cfg{display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:12px 14px;background:#0f0f0f;border:1px solid #1f1f1f;border-radius:6px;}
+.cfg input{flex:1;background:transparent;border:none;color:#e7e9ea;font-family:'Courier New',monospace;font-size:13px;outline:none;}
+.cfg input::placeholder{color:#333;}
+.cfg-st{font-size:10px;white-space:nowrap;}
+.cfg-st.ok{color:#4ade80;}
+.cfg-st.nok{color:#ff4444;}
+.cfg-save{padding:5px 12px;background:#1d9bf0;border:none;border-radius:4px;color:#fff;font-size:11px;font-family:'Courier New',monospace;cursor:pointer;}
+.tema-wrap{position:relative;margin-bottom:8px;}
+.tema-in{width:100%;padding:13px 40px 13px 16px;background:#0f0f0f;border:1px solid #1f1f1f;border-radius:6px;color:#e7e9ea;font-family:'Courier New',monospace;font-size:14px;outline:none;-webkit-appearance:none;}
+.tema-in::placeholder{color:#333;}
+.tema-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:#333;font-size:18px;cursor:pointer;line-height:1;}
+.tema-hint{font-size:10px;color:#2a2a2a;letter-spacing:.05em;margin-bottom:16px;padding-left:2px;}
+.btns{display:flex;gap:8px;margin-bottom:20px;}
+.btn{flex:1;padding:15px 10px;font-size:12px;font-family:'Courier New',monospace;font-weight:bold;letter-spacing:.06em;border-radius:6px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:7px;}
+.btn:active{transform:scale(.97);}
+.btn:disabled{cursor:not-allowed;transform:none;}
+.bp{background:#1d9bf0;border:none;color:#fff;}
+.bo{background:transparent;border:1px solid #1d9bf0;color:#1d9bf0;}
+.bv{background:transparent;border:1px solid #ff4444;color:#ff4444;}
+.bl{background:#0d0d0d;border:1px solid #1f1f1f;color:#444;}
+.err{color:#ff4444;font-size:13px;margin-bottom:16px;padding:12px;border:1px solid #2a0000;border-radius:6px;background:#110000;}
+.meta{display:flex;justify-content:space-between;margin-bottom:10px;font-size:11px;letter-spacing:.08em;}
+.ms{color:#1d9bf0;}
+.mt{color:#2a2a2a;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.pbox{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:8px;padding:18px;margin-bottom:12px;}
+.ptxt{font-size:15px;line-height:1.65;white-space:pre-wrap;color:#e7e9ea;font-family:inherit;}
+.pfooter{display:flex;justify-content:space-between;align-items:center;}
+.cc{font-size:12px;}
+.acts{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end;}
+.ba{padding:8px 13px;border-radius:5px;font-size:12px;font-family:'Courier New',monospace;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:5px;}
+.ba:active{transform:scale(.96);}
+.bg{background:transparent;border:1px solid #1f1f1f;color:#444;}
+.bc{background:transparent;border:1px solid #1f1f1f;color:#555;}
+.bc.cp{background:#0a2a14;border-color:#166534;color:#4ade80;}
+.bx{background:#000;border:1px solid #2a2a2a;color:#fff;font-weight:bold;}
+.th-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.th-lbl{font-size:11px;color:#1d9bf0;letter-spacing:.1em;}
+.th-nws{font-size:11px;color:#2a2a2a;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tw-row{display:flex;}
+.tw-tl{display:flex;flex-direction:column;align-items:center;margin-right:11px;width:14px;}
+.tw-dot{width:7px;height:7px;border-radius:50%;margin-top:15px;flex-shrink:0;}
+.tw-dot.f{background:#1d9bf0;}
+.tw-dot.r{background:#1f1f1f;border:1px solid #2a2a2a;}
+.tw-ln{width:1px;flex:1;background:#1a1a1a;margin:4px 0;}
+.tw-card{flex:1;background:#0f0f0f;border:1px solid #1a1a1a;border-radius:6px;padding:13px;margin-bottom:7px;}
+.tw-txt{font-size:14px;line-height:1.6;margin:0 0 9px 0;white-space:pre-wrap;color:#e7e9ea;font-family:inherit;}
+.tw-ft{display:flex;justify-content:space-between;align-items:center;}
+.tw-ch{font-size:11px;}
+.tw-ac{display:flex;gap:6px;}
+.btc{padding:4px 10px;background:transparent;border:1px solid #1f1f1f;border-radius:3px;color:#333;font-size:11px;font-family:'Courier New',monospace;cursor:pointer;transition:all .2s;}
+.btc.cp{background:#0a2a14;border-color:#166534;color:#4ade80;}
+.btx{padding:4px 10px;background:#000;border:1px solid #1f1f1f;border-radius:3px;color:#fff;font-size:11px;font-family:'Courier New',monospace;cursor:pointer;display:flex;align-items:center;gap:5px;}
+.th-ft{display:flex;gap:8px;justify-content:flex-end;margin-top:4px;}
+.bca{padding:8px 14px;border-radius:5px;font-size:12px;font-family:'Courier New',monospace;cursor:pointer;transition:all .2s;background:transparent;border:1px solid #1f1f1f;color:#444;}
+.bca.cp{background:#0a2a14;border-color:#166534;color:#4ade80;}
+.vr-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+.vr-lbl{font-size:11px;color:#ff4444;letter-spacing:.1em;}
+.vr-nws{font-size:11px;color:#2a2a2a;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.vr-card{background:#0f0f0f;border:1px solid #1a1a1a;border-radius:8px;padding:16px;margin-bottom:10px;}
+.vr-ang{font-size:10px;letter-spacing:.2em;color:#ff4444;text-transform:uppercase;margin-bottom:10px;}
+.vr-txt{font-size:15px;line-height:1.65;white-space:pre-wrap;color:#e7e9ea;font-family:inherit;margin-bottom:10px;}
+.vr-ft{display:flex;justify-content:space-between;align-items:center;}
+.vr-ch{font-size:11px;}
+.vr-ac{display:flex;gap:6px;}
+.spin{display:inline-block;width:11px;height:11px;border:2px solid rgba(255,255,255,.15);border-top:2px solid currentColor;border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fi{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+.res{animation:fi .4s ease;}
+.hid{display:none!important;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div>
+      <div class="h-eye">gerador de conteúdo</div>
+      <div class="h-title">DomX</div>
+    </div>
+    <div class="h-badge">AI & Tech</div>
+  </div>
+
+  <div class="cfg">
+    <span style="font-size:11px;color:#444;">⚙️</span>
+    <input type="password" id="keyInput" placeholder="Cole sua Gemini API Key aqui">
+    <span class="cfg-st nok" id="keyStatus">sem chave</span>
+    <button class="cfg-save" onclick="salvarKey()">salvar</button>
+  </div>
+
+  <div class="tema-wrap">
+    <input class="tema-in" id="temaInput" type="text" placeholder="Tema (ex: IA no Brasil, GPT-5...) ou deixe vazio">
+    <button class="tema-x hid" id="temaX" onclick="limparTema()">×</button>
+  </div>
+  <div class="tema-hint" id="temaHint">🎲 vazio = notícia aleatória do dia</div>
+
+  <div class="btns">
+    <button class="btn bp" id="btnPost" onclick="gerarPost()">⚡ POST</button>
+    <button class="btn bo" id="btnThread" onclick="gerarThread()">🧵 THREAD</button>
+    <button class="btn bv" id="btnViral" onclick="gerarViral()">🔥 VIRAL</button>
+  </div>
+
+  <div id="errBox" class="err hid"></div>
+
+  <div id="postRes" class="res hid">
+    <div class="meta"><span class="ms" id="pStyle"></span><span class="mt" id="pTitle"></span></div>
+    <div class="pbox"><div class="ptxt" id="pText"></div></div>
+    <div class="pfooter">
+      <span class="cc" id="pCC"></span>
+      <div class="acts">
+        <button class="ba bg" onclick="gerarPost()">outro</button>
+        <button class="ba bc" id="btnCP" onclick="copiarPost()">copiar</button>
+        <button class="ba bx" onclick="postX(currentPost)"><svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>postar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="threadRes" class="res hid">
+    <div class="th-hdr"><span class="th-lbl" id="thLbl"></span><span class="th-nws" id="thTitle"></span></div>
+    <div id="thTweets"></div>
+    <div class="th-ft">
+      <button class="ba bg" onclick="gerarThread()">outra</button>
+      <button class="bca" id="btnCA" onclick="copiarTudo()">copiar tudo</button>
+    </div>
+  </div>
+
+  <div id="viralRes" class="res hid">
+    <div class="vr-hdr"><span class="vr-lbl">🔥 3 variações virais</span><span class="vr-nws" id="vrTitle"></span></div>
+    <div id="vrCards"></div>
+    <div class="th-ft"><button class="ba bg" onclick="gerarViral()">outras</button></div>
+  </div>
+</div>
+
+<script>
+const GURL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=';
+const PS = [
+  {n:"no",l:"📰 Notícia + Opinião",p:"Você é criador de conteúdo tech brasileiro no X. Post em português BR: fato em 1-2 linhas + UMA opinião forte. Direto, sem enrolação. Máx 280 chars. SEM hashtags. Máx 1 emoji."},
+  {n:"imt",l:"🔥 Isso Muda Tudo",p:"Você é criador de conteúdo tech brasileiro no X. Post em português BR: afirmação forte e provocativa + explica em 1 linha. Empolgado mas inteligente. Máx 280 chars. SEM hashtags. Máx 1 emoji."},
+  {n:"dp",l:"💡 Dica Prática",p:"Você é criador de conteúdo tech brasileiro no X. Post em português BR: dica prática que o leitor usa hoje. Útil, conciso. Máx 280 chars. SEM hashtags. SEM emojis."},
+  {n:"pr",l:"🎯 Provocação",p:"Você é criador de conteúdo tech brasileiro no X. Post em português BR: afirmação ou pergunta que gera debate. Provocativo mas inteligente. Máx 280 chars. SEM hashtags. SEM emojis."}
+];
+const TP = 'Criador de conteúdo tech brasileiro no X. Thread em português BR. APENAS JSON sem markdown: {"tweets":["Gancho forte 🧵","Contexto e por que importa","Detalhe mais surpreendente","Impacto prático","Sua opinião","CTA engajamento"]} Regras: máx 270 chars cada, tom natural, SEM hashtags, SEM numeração.';
+const VP = 'Especialista em viral para o X. APENAS JSON sem markdown: {"variacoes":[{"angulo":"Emocional","texto":"..."},{"angulo":"Provocativo","texto":"..."},{"angulo":"Dado Surpresa","texto":"..."}]} Regras: máx 270 chars, português BR, SEM hashtags, máx 1 emoji, tom humano.';
+
+let currentPost = '', currentThread = [], currentViral = [];
+
+function gk() { return localStorage.getItem('domx_k') || ''; }
+function sk(v) { localStorage.setItem('domx_k', v.trim()); }
+
+function salvarKey() {
+  const v = document.getElementById('keyInput').value.trim();
+  if (!v) return;
+  sk(v);
+  const st = document.getElementById('keyStatus');
+  st.textContent = '✓ salva'; st.className = 'cfg-st ok';
+}
+
+function getTema() {
+  return document.getElementById('temaInput').value.trim();
+}
+
+function onTemaChange() {
+  const v = document.getElementById('temaInput').value;
+  const x = document.getElementById('temaX');
+  const h = document.getElementById('temaHint');
+  if (v.trim()) {
+    x.classList.remove('hid');
+    h.innerHTML = '✏️ gerando sobre: <span style="color:#1d9bf0">"' + v.trim() + '"</span>';
+  } else {
+    x.classList.add('hid');
+    h.innerHTML = '🎲 vazio = notícia aleatória do dia';
+  }
+}
+
+function limparTema() {
+  document.getElementById('temaInput').value = '';
+  onTemaChange();
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const k = gk();
+  const inp = document.getElementById('keyInput');
+  const st = document.getElementById('keyStatus');
+  if (k) { inp.value = k; st.textContent = '✓ salva'; st.className = 'cfg-st ok'; }
+  document.getElementById('temaInput').addEventListener('input', onTemaChange);
+  document.getElementById('keyInput').addEventListener('input', function() {
+    document.getElementById('keyStatus').textContent = '';
+    document.getElementById('keyStatus').className = 'cfg-st';
+  });
+});
+
+async function callG(sys, usr) {
+  const k = gk();
+  if (!k) throw new Error('Configure sua chave Gemini primeiro ⚙️');
+  const prompt = sys ? sys + '\n\n' + usr : usr;
+  const r = await fetch(GURL + k, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({contents:[{parts:[{text:prompt}]}], generationConfig:{temperature:0.9,maxOutputTokens:2000}})
+  });
+  const d = await r.json();
+  if (d.error) throw new Error(d.error.message);
+  return d.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+async function getNews() {
+  const t = getTema();
+  const p = t
+    ? 'Dado o tema "' + t + '", crie contexto realista. APENAS JSON: {"titulo":"título sobre o tema","resumo":"2-3 frases de contexto"}'
+    : 'Invente notícia fictícia mas realista de AI/tech recente. APENAS JSON: {"titulo":"título","resumo":"2-3 frases"}';
+  const txt = await callG('', p);
+  try {
+    const m = txt.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+    if (m) return JSON.parse(m[0]);
+  } catch(e) {}
+  return {titulo: t || 'Novidade em IA', resumo: txt.slice(0,200)};
+}
+
+function setLoad(mode) {
+  ['post','thread','viral'].forEach(k => {
+    const b = document.getElementById('btn' + k.charAt(0).toUpperCase() + k.slice(1));
+    const labels = {post:'⚡ POST', thread:'🧵 THREAD', viral:'🔥 VIRAL'};
+    const classes = {post:'btn bp', thread:'btn bo', viral:'btn bv'};
+    if (k === mode) { b.className = 'btn bl'; b.innerHTML = '<span class="spin"></span> gerando...'; }
+    else { b.className = classes[k]; b.innerHTML = labels[k]; }
+    b.disabled = !!mode;
+    b.style.opacity = (mode && k !== mode) ? '0.35' : '1';
+  });
+}
+
+function showErr(msg) { const e = document.getElementById('errBox'); e.textContent = msg; e.classList.remove('hid'); }
+function hideAll() { ['errBox','postRes','threadRes','viralRes'].forEach(id => document.getElementById(id).classList.add('hid')); }
+function esc(t) { return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function postX(txt) { window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(txt), '_blank'); }
+
+function setCC(txt) {
+  const el = document.getElementById('pCC'); const n = txt.length;
+  el.textContent = n + '/280';
+  el.style.color = n > 280 ? '#ff4444' : n > 240 ? '#ffaa00' : '#4ade80';
+}
+
+async function gerarPost() {
+  hideAll(); setLoad('post');
+  try {
+    const news = await getNews();
+    const s = PS[Math.floor(Math.random() * PS.length)];
+    const txt = await callG(s.p, 'Tema: ' + news.titulo + '\n\nContexto: ' + news.resumo + '\n\nGere o post. APENAS o texto, sem aspas.');
+    currentPost = txt.trim();
+    document.getElementById('pStyle').textContent = s.l;
+    document.getElementById('pTitle').textContent = news.titulo;
+    document.getElementById('pText').textContent = currentPost;
+    setCC(currentPost);
+    const bc = document.getElementById('btnCP');
+    bc.textContent = 'copiar'; bc.className = 'ba bc';
+    document.getElementById('postRes').classList.remove('hid');
+  } catch(e) { showErr('Erro: ' + e.message); }
+  setLoad(null);
+}
+
+async function gerarThread() {
+  hideAll(); setLoad('thread');
+  try {
+    const news = await getNews();
+    const raw = await callG(TP, 'Tema: ' + news.titulo + '\n\nContexto: ' + news.resumo + '\n\nGere a thread.');
+    try {
+      const m = raw.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+      if (m) { const p = JSON.parse(m[0]); currentThread = p.tweets.map((t,i) => (i+1)+'/ '+t.replace(/^\d+\/\s*/,'')); }
+    } catch(e) { currentThread = raw.split('\n').filter(l=>l.trim().length>20).slice(0,6); }
+    document.getElementById('thLbl').textContent = '🧵 ' + currentThread.length + ' tweets';
+    document.getElementById('thTitle').textContent = news.titulo;
+    const c = document.getElementById('thTweets'); c.innerHTML = '';
+    currentThread.forEach((tw, i) => {
+      const last = i === currentThread.length - 1;
+      const cc = tw.length > 270 ? '#ff4444' : '#2a2a2a';
+      c.innerHTML += '<div class="tw-row"><div class="tw-tl"><div class="tw-dot '+(i===0?'f':'r')+'"></div>'+(last?'':'<div class="tw-ln"></div>')+'</div><div class="tw-card"><div class="tw-txt">'+esc(tw)+'</div><div class="tw-ft"><span class="tw-ch" style="color:'+cc+'">'+tw.length+'/280</span><div class="tw-ac"><button class="btc" id="tc'+i+'" onclick="cpTw('+i+')">copiar</button><button class="btx" onclick="postX(currentThread['+i+'])"><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>postar</button></div></div></div></div>';
+    });
+    const bca = document.getElementById('btnCA'); bca.textContent = 'copiar tudo'; bca.className = 'bca';
+    document.getElementById('threadRes').classList.remove('hid');
+  } catch(e) { showErr('Erro: ' + e.message); }
+  setLoad(null);
+}
+
+async function gerarViral() {
+  hideAll(); setLoad('viral');
+  try {
+    const news = await getNews();
+    const raw = await callG(VP, 'Tema: ' + news.titulo + '\n\nContexto: ' + news.resumo + '\n\nGere as 3 variações.');
+    try {
+      const m = raw.replace(/```json|```/g,'').trim().match(/\{[\s\S]*\}/);
+      if (m) currentViral = JSON.parse(m[0]).variacoes;
+    } catch(e) { currentViral = []; }
+    document.getElementById('vrTitle').textContent = news.titulo;
+    const c = document.getElementById('vrCards'); c.innerHTML = '';
+    currentViral.forEach((v, i) => {
+      const cc = v.texto.length > 270 ? '#ff4444' : '#2a2a2a';
+      c.innerHTML += '<div class="vr-card"><div class="vr-ang">'+esc(v.angulo)+'</div><div class="vr-txt">'+esc(v.texto)+'</div><div class="vr-ft"><span class="vr-ch" style="color:'+cc+'">'+v.texto.length+'/280</span><div class="vr-ac"><button class="btc" id="vc'+i+'" onclick="cpVr('+i+')">copiar</button><button class="btx" onclick="postX(currentViral['+i+'].texto)"><svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>postar</button></div></div></div>';
+    });
+    document.getElementById('viralRes').classList.remove('hid');
+  } catch(e) { showErr('Erro: ' + e.message); }
+  setLoad(null);
+}
+
+function copiarPost() {
+  navigator.clipboard.writeText(currentPost);
+  const b = document.getElementById('btnCP'); b.textContent = '✓'; b.className = 'ba bc cp';
+  setTimeout(() => { b.textContent = 'copiar'; b.className = 'ba bc'; }, 2000);
+}
+function cpTw(i) {
+  navigator.clipboard.writeText(currentThread[i]);
+  const b = document.getElementById('tc'+i); b.textContent = '✓'; b.className = 'btc cp';
+  setTimeout(() => { b.textContent = 'copiar'; b.className = 'btc'; }, 2000);
+}
+function copiarTudo() {
+  navigator.clipboard.writeText(currentThread.join('\n\n'));
+  const b = document.getElementById('btnCA'); b.textContent = '✓ copiado'; b.className = 'bca cp';
+  setTimeout(() => { b.textContent = 'copiar tudo'; b.className = 'bca'; }, 2000);
+}
+function cpVr(i) {
+  navigator.clipboard.writeText(currentViral[i].texto);
+  const b = document.getElementById('vc'+i); b.textContent = '✓'; b.className = 'btc cp';
+  setTimeout(() => { b.textContent = 'copiar'; b.className = 'btc'; }, 2000);
+}
+</script>
+</body>
+</html>
